@@ -9,48 +9,35 @@ using System.Windows.Forms;
 
 namespace Drawing
 {
-    class Triangle : Shape
+    public class Triangle : Shape
     {
-        private Point keyA;
-        public Point KeyA
-        {
-            get { return keyA; }
-            set { keyA = value; }
-        }
 
-        private Point keyB;
-        public Point KeyB
+        private List<Point> positions;      // these points identify opposite corners of the square
+        public override List<Point> Positions   // property
         {
-            get { return keyB; }
-            set { keyB = value; }
+            get { return positions; }
+            set
+            {
+                positions = value;
+            }
         }
-        private Point keyC;
-        public Point KeyC
-        {
-            get { return keyC; }
-            set { keyC = value; }
-        }
-
         public double Area
         {
-            get { return Utils.TriangleAreaCalculator(KeyA, KeyB, KeyC); }
+            get { return Utils.TriangleAreaCalculator(Positions[0], Positions[1], Positions[2]); }
         }
 
         public Triangle(Point point1, Point point2, Point point3)   // constructor
         {
-            this.keyA = point1;
-            this.keyB = point2;
-            this.keyC = point3;
-            IsSelected = false;
+            Positions = new List<Point>() { point1, point2, point3 };
         }
 
         public override void Highlight(Graphics g)
         {
             Pen greenPen = new Pen(Color.FromArgb(255, 0, 255, 0), 10);
             greenPen.Alignment = PenAlignment.Center;
-            g.DrawLine(greenPen, (int)keyA.X, (int)keyA.Y, (int)keyB.X, (int)keyB.Y);
-            g.DrawLine(greenPen, (int)keyB.X, (int)keyB.Y, (int)keyC.X, (int)keyC.Y);
-            g.DrawLine(greenPen, (int)keyA.X, (int)keyA.Y, (int)keyC.X, (int)keyC.Y);
+            g.DrawLine(greenPen, (int)Positions[0].X, (int)Positions[0].Y, (int)Positions[1].X, (int)Positions[1].Y);
+            g.DrawLine(greenPen, (int)Positions[1].X, (int)Positions[1].Y, (int)Positions[2].X, (int)Positions[2].Y);
+            g.DrawLine(greenPen, (int)Positions[0].X, (int)Positions[0].Y, (int)Positions[2].X, (int)Positions[2].Y);
             Draw(g);
         }
 
@@ -58,16 +45,16 @@ namespace Drawing
         {
             Pen blackPen = new Pen(Color.Black);
             // draw triangle
-            g.DrawLine(blackPen, (int)keyA.X, (int)keyA.Y, (int)keyB.X, (int)keyB.Y);
-            g.DrawLine(blackPen, (int)keyB.X, (int)keyB.Y, (int)keyC.X, (int)keyC.Y);
-            g.DrawLine(blackPen, (int)keyA.X, (int)keyA.Y, (int)keyC.X, (int)keyC.Y);
+            g.DrawLine(blackPen, (int)Positions[0].X, (int)Positions[0].Y, (int)Positions[1].X, (int)Positions[1].Y);
+            g.DrawLine(blackPen, (int)Positions[1].X, (int)Positions[1].Y, (int)Positions[2].X, (int)Positions[2].Y);
+            g.DrawLine(blackPen, (int)Positions[0].X, (int)Positions[0].Y, (int)Positions[2].X, (int)Positions[2].Y);
         }
 
         public override double CheckDistance(Point p)
         {
             if (IsInsideTriangle(p))
             {
-                Point centre = Utils.GetTriangleCenter(KeyA, KeyB, KeyC);
+                Point centre = Utils.GetTriangleCenter(Positions[0], Positions[1], Positions[2]);
                 double distance = Utils.GetDistance(centre, p);
                 return distance;
             }
@@ -77,9 +64,9 @@ namespace Drawing
         public bool IsInsideTriangle(Point p)
         {
             double myTriangleArea = Area;
-            double area1 = Utils.TriangleAreaCalculator(p, KeyA, KeyB);
-            double area2 = Utils.TriangleAreaCalculator(p, KeyB, KeyC);
-            double area3 = Utils.TriangleAreaCalculator(p, KeyA, KeyC);
+            double area1 = Utils.TriangleAreaCalculator(p, Positions[0], Positions[1]);
+            double area2 = Utils.TriangleAreaCalculator(p, Positions[1], Positions[2]);
+            double area3 = Utils.TriangleAreaCalculator(p, Positions[0], Positions[2]);
             double temp1 = area1 + area2 + area3;
             double temp2 = myTriangleArea - temp1;
             if  (temp2 <= 4 && temp2 >= -4)
@@ -87,6 +74,29 @@ namespace Drawing
                 return true;
             }
             return false;
+        }
+
+        public override Shape xTranslate(int displacement)
+        {
+            Point newPoint1 = this.Positions[0];
+            newPoint1.X += displacement;
+            Point newPoint2 = this.Positions[1];
+            newPoint2.X += displacement;
+            Point newPoint3 = this.Positions[2];
+            newPoint3.X += displacement;
+            Positions = new List<Point>() { newPoint1, newPoint2, newPoint3 };
+            return this;
+        }
+        public override Shape yTranslate(int displacement)
+        {
+            Point newPoint1 = this.Positions[0];
+            newPoint1.Y += displacement;
+            Point newPoint2 = this.Positions[1];
+            newPoint2.Y += displacement;
+            Point newPoint3 = this.Positions[2];
+            newPoint3.Y += displacement;
+            Positions = new List<Point>() { newPoint1, newPoint2, newPoint3 };
+            return this;
         }
     }
 }

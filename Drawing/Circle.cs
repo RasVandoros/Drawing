@@ -9,18 +9,32 @@ using System.Windows.Forms;
 
 namespace Drawing
 {
-    class Circle : Shape
+    public class Circle : Shape
     {
+        private List<Point> positions;      // these points identify opposite corners of the square
+        public override List<Point> Positions   // property
+        {
+            get { return positions; }
+            set
+            {
+                positions = value;
+                if (Positions.Count == 2)
+                {
+                    Centre = Utils.FindCentre(Positions[0], Positions[1]);
+                    Radius = (int)(Utils.GetDistance(Positions[0], Positions[1]) / 2);
+                }
+            }
+        }
         private Point centre;
         public Point Centre
         {
             get { return centre; }
             set { centre = value; }
         }
-        Point plotPt;
-
+        private Point plotPt;
+        
         private int radius;
-        public int Radious
+        public int Radius
         {
             get { return radius; }
             set { radius= value; }
@@ -28,8 +42,7 @@ namespace Drawing
         //Constructor        
         public Circle(Point point1, Point point2)        
         {
-            centre = Utils.FindCentre(point1, point2);
-            radius = (int)(Utils.GetDistance(point1, point2) / 2);
+            Positions = new List<Point>() { point1, point2};
             IsSelected = false;
         }
 
@@ -104,6 +117,24 @@ namespace Drawing
                 return distance;
             }
             return -1;
+        }
+        public override Shape xTranslate(int displacement)
+        {
+            Point newPoint1 = this.Positions[0];
+            newPoint1.X += displacement;
+            Point newPoint2 = this.Positions[1];
+            newPoint2.X += displacement;
+            Positions = new List<Point>() { newPoint1, newPoint2 };
+            return this;
+        }
+        public override Shape yTranslate(int displacement)
+        {
+            Point newPoint1 = this.Positions[0];
+            newPoint1.Y += displacement;
+            Point newPoint2 = this.Positions[1];
+            newPoint2.Y += displacement;
+            Positions = new List<Point>() { newPoint1, newPoint2 };
+            return this;
         }
     }
 }

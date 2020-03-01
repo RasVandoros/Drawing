@@ -18,6 +18,20 @@ namespace Drawing
         {
             return Math.Abs(p1.X * (p2.Y - p3.Y) + p2.X * (p3.Y - p1.Y) + p3.X * (p1.Y - p2.Y)) / 2;
         }
+
+        internal static bool IsDouble(string text)
+        {
+            bool isDouble = false;
+
+            // Check for empty string.
+            if (string.IsNullOrEmpty(text))
+            {
+                return false;
+            }
+            isDouble = Double.TryParse(text, out double num);
+            return isDouble;
+        }
+
         public static Point GetTriangleCenter(Point p1, Point p2, Point p3)
         {
             Point center = new Point();
