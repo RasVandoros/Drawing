@@ -73,7 +73,6 @@ namespace Drawing
             selectedIndex = -1;
 
         }
-        // Generally, all methods of the form are usually private
         private void SelectSquare(object sender, EventArgs e)
         {
             ResetMode();
