@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace Drawing
@@ -25,7 +24,7 @@ namespace Drawing
                 {
                     if (!string.IsNullOrEmpty(tb.Text))
                     {
-                        if (Double.TryParse(tb.Text, out double num))
+                        if (float.TryParse(tb.Text, out float num))
                         {
                             ht.Add(tb.Name, (int)num);
                         }
@@ -40,11 +39,11 @@ namespace Drawing
             {
                 return;
             }
-            string message = "You asked for.:\n ";
+            string message = "You asked for.:\n";
             ICollection keys = ht.Keys;
             foreach (string key in keys)
             {
-                message = message + key + " of " + ht[key]+ "\n";
+                message = message + "   - " + key + " of " + ht[key]+ "\n";
             }
             message = message + "Would you like to confirm your selection?";
             string title = "Confirmation";
@@ -75,80 +74,23 @@ namespace Drawing
             {
                 return;
             }
+            this.Close();
         }
 
         private void Rotate(int displacement)
         {
-            throw new NotImplementedException();
+            selected = selected.Rotate(displacement);
         }
 
 
         public void TranslateX(int displacement)
         {
-            for (int i = 0; i < GrafPack.activeShapes.Count; i++)
-            {
-                if (GrafPack.activeShapes[i].IsSelected)
-                {
-                    GrafPack.activeShapes[i] = GrafPack.activeShapes[i].xTranslate(displacement);
-                    break;
-                }
-            }
+            selected = selected.TranslateX(displacement);
         }
 
         public void TranslateY(int displacement)
         {
-            for (int i = 0; i < GrafPack.activeShapes.Count; i++)
-            {
-                if (GrafPack.activeShapes[i].IsSelected)
-                {
-                    GrafPack.activeShapes[i] = GrafPack.activeShapes[i].yTranslate(displacement);
-                }
-            }
+            selected = selected.TranslateY(displacement);
         }
-
-        public void asd(int displacement)
-        {
-            int index = -1;
-            for (int i = 0; i < GrafPack.activeShapes.Count; i++)
-            {
-                if (GrafPack.activeShapes[i].IsSelected)
-                {
-                    index = i;
-                    if (GrafPack.activeShapes[i].GetType().Name == "Square")
-                    {
-                        Point newPoint1 = GrafPack.activeShapes[i].Positions[0];
-                        newPoint1.X += displacement;
-                        Point newPoint2 = GrafPack.activeShapes[i].Positions[1];
-                        newPoint2.X += displacement;
-                        GrafPack.activeShapes[i] = new Square(newPoint1, newPoint2);
-
-                    }
-                    else if (GrafPack.activeShapes[i].GetType().Name == "Triangle")
-                    {
-                        Point newPoint1 = GrafPack.activeShapes[i].Positions[0];
-                        newPoint1.X += displacement;
-                        Point newPoint2 = GrafPack.activeShapes[i].Positions[1];
-                        newPoint2.X += displacement;
-                        Point newPoint3 = GrafPack.activeShapes[i].Positions[2];
-                        newPoint2.X += displacement;
-                        GrafPack.activeShapes[i] = new Triangle(newPoint1, newPoint2, newPoint3);
-                    }
-                    else if (GrafPack.activeShapes[i].GetType().Name == "Circle")
-                    {
-                        Point newPoint1 = GrafPack.activeShapes[i].Positions[0];
-                        newPoint1.X += displacement;
-                        Point newPoint2 = GrafPack.activeShapes[i].Positions[1];
-                        newPoint2.X += displacement;
-                        GrafPack.activeShapes[i] = new Circle(newPoint1, newPoint2);
-                    }
-                    else
-                    {
-                        return;
-                    }
-                    break;
-                }
-            }
-        }
-
     }
 }

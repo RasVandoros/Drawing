@@ -34,10 +34,10 @@
             this.rotationDegrees = new System.Windows.Forms.Label();
             this.yTranslation = new System.Windows.Forms.TextBox();
             this.xTranslation = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
             this.rotation = new System.Windows.Forms.TextBox();
             this.submitButton = new System.Windows.Forms.Button();
+            this.label1 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // xDisplacement
@@ -93,24 +93,6 @@
             this.xTranslation.Size = new System.Drawing.Size(63, 20);
             this.xTranslation.TabIndex = 16;
             // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(155, 85);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(35, 13);
-            this.label2.TabIndex = 13;
-            this.label2.Text = "label2";
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(43, 85);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(90, 13);
-            this.label1.TabIndex = 12;
-            this.label1.Text = "Examimed shape:";
-            // 
             // rotation
             // 
             this.rotation.Location = new System.Drawing.Point(158, 198);
@@ -128,7 +110,25 @@
             this.submitButton.UseVisualStyleBackColor = true;
             this.submitButton.Click += new System.EventHandler(this.submitButton_Click);
             // 
-            // RotateForm
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(43, 85);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(90, 13);
+            this.label1.TabIndex = 12;
+            this.label1.Text = "Examimed shape:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(155, 85);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(35, 13);
+            this.label2.TabIndex = 13;
+            this.label2.Text = "label2";
+            // 
+            // TranformationForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -143,7 +143,7 @@
             this.Controls.Add(this.xTranslation);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Name = "RotateForm";
+            this.Name = "TranformationForm";
             this.Text = "RotateForm";
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -157,9 +157,9 @@
         private System.Windows.Forms.Label rotationDegrees;
         private System.Windows.Forms.TextBox yTranslation;
         private System.Windows.Forms.TextBox xTranslation;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox rotation;
         private System.Windows.Forms.Button submitButton;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label label2;
     }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.backgroundWorker1 = new System.ComponentModel.BackgroundWorker();
             this.SuspendLayout();
             // 
             // GrafPack
@@ -38,11 +39,14 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Name = "GrafPack";
             this.Text = "Draw!";
+            this.Paint += new System.Windows.Forms.PaintEventHandler(this.GrafPack_Paint);
             this.ResumeLayout(false);
 
         }
 
         #endregion
+
+        private System.ComponentModel.BackgroundWorker backgroundWorker1;
     }
 }
 

@@ -7,20 +7,18 @@ namespace Drawing
 {
     public partial class GrafPack : Form
     {
-        private MainMenu mainMenu;
         private bool selectShapeMode = false;
         private bool createShapeMode = false;
-        private bool deleteShapeMode = false;
         private bool selectSquareStatus = false;
         private bool selectTriangleStatus = false;
         private bool selectCircleStatus = false;
         private int clicknumber = 0;
-        private Point one;
-        private Point two;
-        private Point three;
-        private Shape selectedShape;
+        private PointF one;
+        private PointF two;
+        private PointF three;
+        private int selectedIndex;
         private ContextMenu mnu;
-        
+
         public static List<Shape> activeShapes = new List<Shape>();
 
         public GrafPack()
@@ -29,19 +27,16 @@ namespace Drawing
             this.SetStyle(ControlStyles.ResizeRedraw, true);
             this.WindowState = FormWindowState.Maximized;
             this.BackColor = Color.White;
-            // The following approach uses menu items coupled with mouse clicks
+
             MainMenu mainMenu = new MainMenu();
             MenuItem createItem = new MenuItem();
             MenuItem selectItem = new MenuItem();
             MenuItem deleteItem = new MenuItem();
             MenuItem transformItem = new MenuItem();
-
             MenuItem squareItem = new MenuItem();
             MenuItem triangleItem = new MenuItem();
             MenuItem circleItem = new MenuItem();
-            MenuItem rotateItem = new MenuItem();
-            MenuItem moveItem = new MenuItem();
-
+            MenuItem moveRotateItem = new MenuItem();
 
             createItem.Text = "&Create";
             squareItem.Text = "&Square";
@@ -50,8 +45,7 @@ namespace Drawing
             selectItem.Text = "&Select";
             deleteItem.Text = "&Delete";
             transformItem.Text = "&Transform";
-            moveItem.Text = "&Move";
-            rotateItem.Text = "&Rotate";
+            moveRotateItem.Text = "&Move/Rotate";
 
             mainMenu.MenuItems.Add(createItem);
             mainMenu.MenuItems.Add(selectItem);
@@ -60,37 +54,34 @@ namespace Drawing
             createItem.MenuItems.Add(squareItem);
             createItem.MenuItems.Add(triangleItem);
             createItem.MenuItems.Add(circleItem);
-            transformItem.MenuItems.Add(moveItem);
-            transformItem.MenuItems.Add(rotateItem);
+            transformItem.MenuItems.Add(moveRotateItem);
 
-            selectItem.Click += new System.EventHandler(this.selectShape);
-            deleteItem.Click += new System.EventHandler(this.deleteShape);
-            squareItem.Click += new System.EventHandler(this.selectSquare);
-            triangleItem.Click += new System.EventHandler(this.selectTriangle);
-            circleItem.Click += new System.EventHandler(this.selectCircle);
-            moveItem.Click += new System.EventHandler(this.selectMove);
-            rotateItem.Click += new System.EventHandler(this.selectRotate);
+            selectItem.Click += new System.EventHandler(this.SelectShape);
+            deleteItem.Click += new System.EventHandler(this.DeleteShape);
+            squareItem.Click += new System.EventHandler(this.SelectSquare);
+            triangleItem.Click += new System.EventHandler(this.SelectTriangle);
+            circleItem.Click += new System.EventHandler(this.SelectCircle);
+            moveRotateItem.Click += new System.EventHandler(this.SelectTransform);
             this.Menu = mainMenu;
             this.MouseClick += mouseClick;
-
             mnu = new ContextMenu();
-            MenuItem mnuMove = new MenuItem("Move");
-            MenuItem mnuRotate = new MenuItem("Rotate");
-            mnuMove.Click += new EventHandler(selectMove);
-            mnuRotate.Click += new EventHandler(selectRotate);
-            mnu.MenuItems.AddRange(new MenuItem[] { mnuMove, mnuRotate });
+            MenuItem mnuTransform = new MenuItem("Transform");
+            mnuTransform.Click += new EventHandler(SelectTransform);
+            mnu.MenuItems.AddRange(new MenuItem[] { mnuTransform });
             ContextMenu = mnu;
             HideContextMenu();
+            selectedIndex = -1;
+
         }
         // Generally, all methods of the form are usually private
-        private void selectSquare(object sender, EventArgs e)
+        private void SelectSquare(object sender, EventArgs e)
         {
             ResetMode();
             selectSquareStatus = true;
             createShapeMode = true;
             MessageBox.Show("Click OK and then click once each at two locations to create a square");
         }
-        private void selectTriangle(object sender, EventArgs e)
+        private void SelectTriangle(object sender, EventArgs e)
         {
             ResetMode();
             selectTriangleStatus = true;
@@ -98,47 +89,52 @@ namespace Drawing
 
             MessageBox.Show("Click OK and then click once each at three locations to create a triangle");
         }
-        private void selectCircle(object sender, EventArgs e)
+        private void SelectCircle(object sender, EventArgs e)
         {
             ResetMode();
             selectCircleStatus = true;
             createShapeMode = true;
             MessageBox.Show("Click OK and then click once each at two locations to create a circle");
         }
-        private void selectShape(object sender, EventArgs e)
+        private void SelectShape(object sender, EventArgs e)
         {
             ResetMode();
             selectShapeMode = true;
         }
-        private void selectMove(object sender, EventArgs e)
+        private void SelectTransform(object sender, EventArgs e)
         {
-            ResetMode();
-            if (selectedShape != null)
+            if (selectedIndex != -1)
             {
-                TranformationForm rf = new TranformationForm(selectedShape);
+                TranformationForm rf = new TranformationForm(activeShapes[selectedIndex]);
                 rf.ShowDialog();
                 RefreshDrawings();
             }
-        }
-        private void selectRotate(object sender, EventArgs e)
-        {
-            ResetMode();
-        }
-        private void deleteShape(object sender, EventArgs e)
-        {
-            MessageBox.Show("You selected the Delete option. The selected shape is now deleted!");
-            ResetMode();
-            for (int i = activeShapes.Count - 1; i >= 0; i--)
+            else
             {
-                if (activeShapes[i].IsSelected)
-                {
-                    activeShapes.RemoveAt(i);
-                }
+                MessageBox.Show("Please select a shape first!");
+                ResetMode();
+                selectShapeMode = true;
             }
-            RefreshDrawings();
         }
-        // This method is quite important and detects all mouse clicks - other methods may need
-        // to be implemented to detect other kinds of event handling eg keyboard presses.
+        private void DeleteShape(object sender, EventArgs e)
+        {
+            string message ="Are you sure you want to delete the selected shape?";
+            string title = "Delete Shape";
+            MessageBoxButtons buttons = MessageBoxButtons.YesNo;
+            DialogResult result = MessageBox.Show(message, title, buttons);
+            if (result == DialogResult.Yes)
+            {
+                for (int i = activeShapes.Count - 1; i >= 0; i--)
+                {
+                    if (activeShapes[i].IsSelected)
+                    {
+                        activeShapes.RemoveAt(i);
+                    }
+                }
+                RefreshDrawings();
+            }
+            ResetMode();
+        }
         private void mouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
@@ -168,47 +164,48 @@ namespace Drawing
         }
         private void Highlight(MouseEventArgs e)
         {
-            Shape newHighlight = null;
-            double minDistance = 99999999;
-            Point point = new Point(e.X, e.Y);
-            Shape oldHighlight = null;
+            int newHightlightId = -1;
+            float minDistance = 99999999f;
+            PointF point = new PointF(e.X, e.Y);
+            int oldHightlightId = -1;
 
-            foreach (Shape shape in activeShapes)
+            for (int i = 0; i < activeShapes.Count; i++)
             {
-                if (shape.IsSelected)
+                if (activeShapes[i].IsSelected)
                 {
-                    oldHighlight = shape;
+                    oldHightlightId = i;
                 }
-                double distance = shape.CheckDistance(point);
+                float distance = activeShapes[i].CheckDistance(point);
                 if (distance >= 0 && distance <= minDistance)
                 {
                     minDistance = distance;
-                    newHighlight = shape;
+                    newHightlightId = i;
                 }
             }
             Graphics g = this.CreateGraphics();
-            if (newHighlight != null)
+            if (newHightlightId != -1)
             {
                 ShowContextMenu();
-                if (oldHighlight != null)
+                if (oldHightlightId != -1)
                 {
-                    if (oldHighlight != newHighlight)
+                    if (oldHightlightId != newHightlightId)
                     {
-                        oldHighlight.IsSelected = false; //deselected previous selected figure
-                        newHighlight.IsSelected = true;
-                        selectedShape = newHighlight;
+                        activeShapes[oldHightlightId].IsSelected = false; //deselected previous selected figure
+                        activeShapes[newHightlightId].IsSelected = true;
+                        selectedIndex = newHightlightId;
                     }
                     else
                     {
-                        oldHighlight.IsSelected = false; //if same is selected - deselect
+                        activeShapes[oldHightlightId].IsSelected = false; //if same is selected - deselect
                         HideContextMenu();
-                        selectedShape = null;
+                        selectedIndex = -1;
                     }
                 }
                 else
                 {
-                    newHighlight.IsSelected = true; //no preselected figure, just select new.
-                    selectedShape = newHighlight;
+                    activeShapes[newHightlightId].IsSelected = true; //no preselected figure, just select new.
+                    selectedIndex = newHightlightId;
+
                 }
                 RefreshDrawings();
             }
@@ -222,10 +219,12 @@ namespace Drawing
                 if (s.IsSelected)
                 {
                     s.Highlight(g);
+                    PrintCoordinates(Convert.ToInt32(s.Center.X), Convert.ToInt32(s.Center.Y));
                 }
                 else
                 {
                     s.Draw(g);
+                    PrintCoordinates(Convert.ToInt32(s.Center.X), Convert.ToInt32(s.Center.Y));
                 }
             }
         }
@@ -233,12 +232,12 @@ namespace Drawing
         {
             if (clicknumber == 0)
             {
-                one = new Point(e.X, e.Y);
+                one = new PointF(e.X, e.Y);
                 clicknumber = 1;
             }
             else
             {
-                two = new Point(e.X, e.Y);
+                two = new PointF(e.X, e.Y);
                 clicknumber = 0;
                 Graphics g = this.CreateGraphics();
                 Pen blackpen = new Pen(Color.Black);
@@ -247,22 +246,23 @@ namespace Drawing
                 activeShapes.Add(aShape);
                 aShape.Draw(g);
             }
+            RefreshDrawings();
         }
         private void CreateTriangle(MouseEventArgs e)
         {
             if (clicknumber == 0)
             {
-                one = new Point(e.X, e.Y);
+                one = new PointF(e.X, e.Y);
                 clicknumber = 1;
             }
             else if (clicknumber == 1)
             {
-                two = new Point(e.X, e.Y);
+                two = new PointF(e.X, e.Y);
                 clicknumber = 2;
             }
             else
             {
-                three = new Point(e.X, e.Y);
+                three = new PointF(e.X, e.Y);
                 clicknumber = 0;
                 Graphics g = this.CreateGraphics();
                 Pen blackpen = new Pen(Color.Black);
@@ -271,23 +271,25 @@ namespace Drawing
                 activeShapes.Add(aShape);
                 aShape.Draw(g);
             }
+            RefreshDrawings();
         }
         private void CreateSquare(MouseEventArgs e)
         {
             if (clicknumber == 0)
             {
-                one = new Point(e.X, e.Y);
+                one = new PointF(e.X, e.Y);
                 clicknumber = 1;
             }
             else
             {
-                two = new Point(e.X, e.Y);
+                two = new PointF(e.X, e.Y);
                 clicknumber = 0;
                 Graphics g = this.CreateGraphics();
                 Square aShape = new Square(one, two);
                 activeShapes.Add(aShape);
                 aShape.Draw(g);
             }
+            RefreshDrawings();
         }
         private void ResetMode()
         {
@@ -311,6 +313,52 @@ namespace Drawing
             {
                 item.Visible = false;
             }
+        }
+        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+        {
+            if (selectedIndex == -1 || activeShapes.Count <= 1)
+            {
+                return false;
+            }
+            activeShapes[selectedIndex].IsSelected = false;
+            if (keyData == Keys.Right)
+            {
+                if (selectedIndex + 1 < activeShapes.Count)
+                {
+                    selectedIndex++;
+                }
+                else
+                {
+                    selectedIndex = 0;
+                }
+            }
+            if (keyData == Keys.Left)
+            {
+                if (selectedIndex - 1 >= 0)
+                {
+                    selectedIndex--;
+                }
+                else
+                {
+                    selectedIndex = activeShapes.Count - 1;
+                }
+            }
+            activeShapes[selectedIndex].IsSelected = true;
+            RefreshDrawings();
+            return true;
+        }
+
+        private void GrafPack_Paint(object sender, PaintEventArgs e)
+        {
+            RefreshDrawings();
+        }
+        private void PrintCoordinates(int x, int y)
+        {
+            Label pixelCoordinates = new Label();
+            pixelCoordinates.Location = new Point(Convert.ToInt32(x), Convert.ToInt32(y));
+            pixelCoordinates.Text = "(" + x + ", " + y + ")";
+            pixelCoordinates.AutoSize = true;
+            Controls.Add(pixelCoordinates);
         }
     }
 }

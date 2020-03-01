@@ -1,18 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Drawing
 {
     public class Circle : Shape
     {
-        private List<Point> positions;      // these points identify opposite corners of the square
-        public override List<Point> Positions   // property
+        private List<PointF> positions;      // these points identify opposite corners of the square
+        public override List<PointF> Positions   // property
         {
             get { return positions; }
             set
@@ -20,18 +15,18 @@ namespace Drawing
                 positions = value;
                 if (Positions.Count == 2)
                 {
-                    Centre = Utils.FindCentre(Positions[0], Positions[1]);
+                    Center = Utils.FindCentre(Positions[0], Positions[1]);
                     Radius = (int)(Utils.GetDistance(Positions[0], Positions[1]) / 2);
                 }
             }
         }
-        private Point centre;
-        public Point Centre
+        private PointF centre;
+        public override PointF Center
         {
             get { return centre; }
             set { centre = value; }
         }
-        private Point plotPt;
+        private PointF plotPt;
         
         private int radius;
         public int Radius
@@ -40,18 +35,9 @@ namespace Drawing
             set { radius= value; }
         }
         //Constructor        
-        public Circle(Point point1, Point point2)        
+        public Circle(PointF point1, PointF point2)        
         {
-            Positions = new List<Point>() { point1, point2};
-            IsSelected = false;
-        }
-
-        // Method fills in one pixel only        
-        private void PutPixel(Graphics g, Point pixel)
-        {
-            Brush aBrush = (Brush)Brushes.Black;
-            // FillRectangle call fills at location x y and is 1 pixel high by 1 pixel wide            
-            g.FillRectangle(aBrush, pixel.X, pixel.Y, 1, 1);
+            Positions = new List<PointF>() { point1, point2 };
         }
         public override void Highlight(Graphics g)
         {
@@ -62,7 +48,7 @@ namespace Drawing
         {
             IterateCircle(g, PutPixel);
         }
-        public void IterateCircle(Graphics g, Action<Graphics, Point> ApplyTechnique)
+        public void IterateCircle(Graphics g, Action<Graphics, PointF> ApplyTechnique)
         {
             int x = 0;
             int y = radius;
@@ -109,31 +95,35 @@ namespace Drawing
                 x++;
             }
         }
-        public override double CheckDistance(Point p)
+        public override float CheckDistance(PointF p)
         {
-            double distance = Utils.GetDistance(centre, p);
+            float distance = Utils.GetDistance(Center, p);
             if (distance <= radius)
             {
                 return distance;
             }
             return -1;
         }
-        public override Shape xTranslate(int displacement)
+        public override Shape TranslateX(int displacement)
         {
-            Point newPoint1 = this.Positions[0];
+            PointF newPoint1 = this.Positions[0];
             newPoint1.X += displacement;
-            Point newPoint2 = this.Positions[1];
+            PointF newPoint2 = this.Positions[1];
             newPoint2.X += displacement;
-            Positions = new List<Point>() { newPoint1, newPoint2 };
+            Positions = new List<PointF>() { newPoint1, newPoint2 };
             return this;
         }
-        public override Shape yTranslate(int displacement)
+        public override Shape TranslateY(int displacement)
         {
-            Point newPoint1 = this.Positions[0];
+            PointF newPoint1 = this.Positions[0];
             newPoint1.Y += displacement;
-            Point newPoint2 = this.Positions[1];
+            PointF newPoint2 = this.Positions[1];
             newPoint2.Y += displacement;
-            Positions = new List<Point>() { newPoint1, newPoint2 };
+            Positions = new List<PointF>() { newPoint1, newPoint2 };
+            return this;
+        }
+        public override Shape Rotate(float angle)
+        {
             return this;
         }
     }

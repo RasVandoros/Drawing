@@ -2,9 +2,6 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Drawing
@@ -12,8 +9,8 @@ namespace Drawing
     public class Triangle : Shape
     {
 
-        private List<Point> positions;      // these points identify opposite corners of the square
-        public override List<Point> Positions   // property
+        private List<PointF> positions;      // these points identify opposite corners of the square
+        public override List<PointF> Positions   // property
         {
             get { return positions; }
             set
@@ -21,16 +18,26 @@ namespace Drawing
                 positions = value;
             }
         }
-        public double Area
+        public float Area
         {
             get { return Utils.TriangleAreaCalculator(Positions[0], Positions[1], Positions[2]); }
         }
-
-        public Triangle(Point point1, Point point2, Point point3)   // constructor
+        public override PointF Center
         {
-            Positions = new List<Point>() { point1, point2, point3 };
+            get 
+            {
+                PointF center = new PointF();
+                center.X = (Positions[0].X + Positions[1].X + Positions[2].X) / 3;
+                center.Y = (Positions[0].Y + Positions[1].Y + Positions[2].Y) / 3;
+                return center;
+            }
+            set { }
+            
         }
-
+        public Triangle(PointF point1, PointF point2, PointF point3)   // constructor
+        {
+            Positions = new List<PointF>() { point1, point2, point3 };
+        }
         public override void Highlight(Graphics g)
         {
             Pen greenPen = new Pen(Color.FromArgb(255, 0, 255, 0), 10);
@@ -38,9 +45,14 @@ namespace Drawing
             g.DrawLine(greenPen, (int)Positions[0].X, (int)Positions[0].Y, (int)Positions[1].X, (int)Positions[1].Y);
             g.DrawLine(greenPen, (int)Positions[1].X, (int)Positions[1].Y, (int)Positions[2].X, (int)Positions[2].Y);
             g.DrawLine(greenPen, (int)Positions[0].X, (int)Positions[0].Y, (int)Positions[2].X, (int)Positions[2].Y);
-            Draw(g);
+            
+            
+            
+            
+            
+            
+            ;
         }
-
         public override void Draw(Graphics g)
         {
             Pen blackPen = new Pen(Color.Black);
@@ -48,54 +60,65 @@ namespace Drawing
             g.DrawLine(blackPen, (int)Positions[0].X, (int)Positions[0].Y, (int)Positions[1].X, (int)Positions[1].Y);
             g.DrawLine(blackPen, (int)Positions[1].X, (int)Positions[1].Y, (int)Positions[2].X, (int)Positions[2].Y);
             g.DrawLine(blackPen, (int)Positions[0].X, (int)Positions[0].Y, (int)Positions[2].X, (int)Positions[2].Y);
-        }
+            PutPixel(g, Center);
 
-        public override double CheckDistance(Point p)
+            Label origin = new Label();
+            GrafPack gp = new GrafPack();
+            origin.Text = ("(" + Center.X + ", " + Center.Y + ")");
+            origin.Location = new Point((int)Center.X, (int)Center.Y);
+            gp.Controls.Add(origin);
+        }
+        public override float CheckDistance(PointF p)
         {
             if (IsInsideTriangle(p))
             {
-                Point centre = Utils.GetTriangleCenter(Positions[0], Positions[1], Positions[2]);
-                double distance = Utils.GetDistance(centre, p);
+                float distance = Utils.GetDistance(Center, p);
                 return distance;
             }
             return -1;
         }
-
-        public bool IsInsideTriangle(Point p)
+        public bool IsInsideTriangle(PointF p)
         {
-            double myTriangleArea = Area;
-            double area1 = Utils.TriangleAreaCalculator(p, Positions[0], Positions[1]);
-            double area2 = Utils.TriangleAreaCalculator(p, Positions[1], Positions[2]);
-            double area3 = Utils.TriangleAreaCalculator(p, Positions[0], Positions[2]);
-            double temp1 = area1 + area2 + area3;
-            double temp2 = myTriangleArea - temp1;
+            float myTriangleArea = Area;
+            float area1 = Utils.TriangleAreaCalculator(p, Positions[0], Positions[1]);
+            float area2 = Utils.TriangleAreaCalculator(p, Positions[1], Positions[2]);
+            float area3 = Utils.TriangleAreaCalculator(p, Positions[0], Positions[2]);
+            float temp1 = area1 + area2 + area3;
+            float temp2 = myTriangleArea - temp1;
             if  (temp2 <= 4 && temp2 >= -4)
             {
                 return true;
             }
             return false;
         }
-
-        public override Shape xTranslate(int displacement)
+        public override Shape TranslateX(int displacement)
         {
-            Point newPoint1 = this.Positions[0];
+            PointF newPoint1 = this.Positions[0];
             newPoint1.X += displacement;
-            Point newPoint2 = this.Positions[1];
+            PointF newPoint2 = this.Positions[1];
             newPoint2.X += displacement;
-            Point newPoint3 = this.Positions[2];
+            PointF newPoint3 = this.Positions[2];
             newPoint3.X += displacement;
-            Positions = new List<Point>() { newPoint1, newPoint2, newPoint3 };
+            Positions = new List<PointF>() { newPoint1, newPoint2, newPoint3 };
             return this;
         }
-        public override Shape yTranslate(int displacement)
+        public override Shape TranslateY(int displacement)
         {
-            Point newPoint1 = this.Positions[0];
+            PointF newPoint1 = this.Positions[0];
             newPoint1.Y += displacement;
-            Point newPoint2 = this.Positions[1];
+            PointF newPoint2 = this.Positions[1];
             newPoint2.Y += displacement;
-            Point newPoint3 = this.Positions[2];
+            PointF newPoint3 = this.Positions[2];
             newPoint3.Y += displacement;
-            Positions = new List<Point>() { newPoint1, newPoint2, newPoint3 };
+            Positions = new List<PointF>() { newPoint1, newPoint2, newPoint3 };
+            return this;
+        }
+        public override Shape Rotate(float angle)
+        {
+            PointF newPoint1 = this.Rotate_point(Center, angle, Positions[0]);
+            PointF newPoint2 = this.Rotate_point(Center, angle, Positions[1]);
+            PointF newPoint3 = this.Rotate_point(Center, angle, Positions[2]);
+            Positions = new List<PointF>() { newPoint1, newPoint2, newPoint3 };
             return this;
         }
     }
