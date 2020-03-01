@@ -20,7 +20,7 @@ namespace Drawing
             Dictionary<string, int> ht = new Dictionary<string, int>();
             foreach (Control tb in this.Controls)
             {
-                if(tb is TextBox)
+                if (tb is TextBox)
                 {
                     if (!string.IsNullOrEmpty(tb.Text))
                     {
@@ -43,7 +43,7 @@ namespace Drawing
             ICollection keys = ht.Keys;
             foreach (string key in keys)
             {
-                message = message + "   - " + key + " of " + ht[key]+ "\n";
+                message = message + "   - " + key + " of " + ht[key] + "\n";
             }
             message = message + "Would you like to confirm your selection?";
             string title = "Confirmation";

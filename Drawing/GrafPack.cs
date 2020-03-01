@@ -117,7 +117,7 @@ namespace Drawing
         }
         private void DeleteShape(object sender, EventArgs e)
         {
-            string message ="Are you sure you want to delete the selected shape?";
+            string message = "Are you sure you want to delete the selected shape?";
             string title = "Delete Shape";
             MessageBoxButtons buttons = MessageBoxButtons.YesNo;
             DialogResult result = MessageBox.Show(message, title, buttons);

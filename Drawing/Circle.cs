@@ -27,15 +27,15 @@ namespace Drawing
             set { centre = value; }
         }
         private PointF plotPt;
-        
+
         private int radius;
         public int Radius
         {
             get { return radius; }
-            set { radius= value; }
+            set { radius = value; }
         }
         //Constructor        
-        public Circle(PointF point1, PointF point2)        
+        public Circle(PointF point1, PointF point2)
         {
             Positions = new List<PointF>() { point1, point2 };
         }

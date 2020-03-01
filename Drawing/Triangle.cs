@@ -24,7 +24,7 @@ namespace Drawing
         }
         public override PointF Center
         {
-            get 
+            get
             {
                 PointF center = new PointF();
                 center.X = (Positions[0].X + Positions[1].X + Positions[2].X) / 3;
@@ -32,7 +32,7 @@ namespace Drawing
                 return center;
             }
             set { }
-            
+
         }
         public Triangle(PointF point1, PointF point2, PointF point3)   // constructor
         {
@@ -45,12 +45,12 @@ namespace Drawing
             g.DrawLine(greenPen, (int)Positions[0].X, (int)Positions[0].Y, (int)Positions[1].X, (int)Positions[1].Y);
             g.DrawLine(greenPen, (int)Positions[1].X, (int)Positions[1].Y, (int)Positions[2].X, (int)Positions[2].Y);
             g.DrawLine(greenPen, (int)Positions[0].X, (int)Positions[0].Y, (int)Positions[2].X, (int)Positions[2].Y);
-            
-            
-            
-            
-            
-            
+
+
+
+
+
+
             ;
         }
         public override void Draw(Graphics g)
@@ -85,7 +85,7 @@ namespace Drawing
             float area3 = Utils.TriangleAreaCalculator(p, Positions[0], Positions[2]);
             float temp1 = area1 + area2 + area3;
             float temp2 = myTriangleArea - temp1;
-            if  (temp2 <= 4 && temp2 >= -4)
+            if (temp2 <= 4 && temp2 >= -4)
             {
                 return true;
             }

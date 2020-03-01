@@ -7,15 +7,16 @@ namespace Drawing
     public abstract class Shape
     {
         bool isSelected;
-        public bool IsSelected {
-            get { return isSelected; }  
-            set { isSelected = value; }  
+        public bool IsSelected
+        {
+            get { return isSelected; }
+            set { isSelected = value; }
         }
         public abstract PointF Center
         {
             get;
             set;
-        } 
+        }
         public abstract List<PointF> Positions
         {
             get;

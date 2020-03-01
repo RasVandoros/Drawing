@@ -31,18 +31,18 @@ namespace Drawing
                 center.Y = (Positions[1].Y + Positions[0].Y) / 2;
                 return center;
             }
-            set{}
+            set { }
 
         }
 
         public Square(PointF keyPt, PointF oppPt)   // constructor
         {
-            Positions = new List<PointF>() { keyPt, oppPt};
+            Positions = new List<PointF>() { keyPt, oppPt };
         }
 
         public override void Draw(Graphics g)
         {
-            Pen blackPen = new Pen(Color.Black);            
+            Pen blackPen = new Pen(Color.Black);
             // draw square
             g.DrawLine(blackPen, (int)Positions[0].X, (int)Positions[0].Y, (int)(Center.X + yDiff / 2), (int)(Center.Y - xDiff / 2));
             g.DrawLine(blackPen, (int)(Center.X + yDiff / 2), (int)(Center.Y - xDiff / 2), (int)Positions[1].X, (int)Positions[1].Y);
@@ -58,7 +58,7 @@ namespace Drawing
             xDiff = Positions[1].X - Positions[0].X;
             yDiff = Positions[1].Y - Positions[0].Y;
         }
-        
+
         public override void Highlight(Graphics g)
         {
             Pen greenPen = new Pen(Color.FromArgb(255, 0, 255, 0), 10);
