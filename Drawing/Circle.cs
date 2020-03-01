@@ -6,7 +6,7 @@ namespace Drawing
 {
     public class Circle : Shape
     {
-        private List<PointF> positions;      // these points identify opposite corners of the square
+        private List<PointF> positions; // these points identify opposite corners of the square
         public override List<PointF> Positions   // property
         {
             get { return positions; }
@@ -27,7 +27,6 @@ namespace Drawing
             set { centre = value; }
         }
         private PointF plotPt;
-
         private int radius;
         public int Radius
         {

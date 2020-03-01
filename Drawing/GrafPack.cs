@@ -18,7 +18,6 @@ namespace Drawing
         private PointF three;
         private int selectedIndex;
         private ContextMenu mnu;
-
         public static List<Shape> activeShapes = new List<Shape>();
 
         public GrafPack()
@@ -106,6 +105,7 @@ namespace Drawing
             {
                 TranformationForm rf = new TranformationForm(activeShapes[selectedIndex]);
                 rf.ShowDialog();
+                this.Controls.Clear();
                 RefreshDrawings();
             }
             else
@@ -128,8 +128,10 @@ namespace Drawing
                     if (activeShapes[i].IsSelected)
                     {
                         activeShapes.RemoveAt(i);
+                        selectedIndex = -1;
                     }
                 }
+                this.Controls.Clear();
                 RefreshDrawings();
             }
             ResetMode();
@@ -215,6 +217,7 @@ namespace Drawing
             g.Clear(Color.White);
             foreach (Shape s in activeShapes)
             {
+                
                 if (s.IsSelected)
                 {
                     s.Highlight(g);
@@ -314,10 +317,20 @@ namespace Drawing
             }
         }
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            if (selectedIndex == -1 || activeShapes.Count <= 1)
+        { 
+            if (selectedIndex == -1)
             {
-                return false;
+                if(activeShapes.Count < 1)
+                {
+                    return false;
+                }
+                else
+                {
+                    selectedIndex = 0;
+                    activeShapes[0].IsSelected = true;
+                    RefreshDrawings();
+                    return true;
+                }
             }
             activeShapes[selectedIndex].IsSelected = false;
             if (keyData == Keys.Right)
@@ -346,12 +359,11 @@ namespace Drawing
             RefreshDrawings();
             return true;
         }
-
         private void GrafPack_Paint(object sender, PaintEventArgs e)
         {
             RefreshDrawings();
         }
-        private void PrintCoordinates(int x, int y)
+        private void PrintCoordinates(int x, int y) //int for visual clarity
         {
             Label pixelCoordinates = new Label();
             pixelCoordinates.Location = new Point(Convert.ToInt32(x), Convert.ToInt32(y));

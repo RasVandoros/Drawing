@@ -8,7 +8,6 @@ namespace Drawing
 {
     public class Triangle : Shape
     {
-
         private List<PointF> positions;      // these points identify opposite corners of the square
         public override List<PointF> Positions   // property
         {

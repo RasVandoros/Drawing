@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Windows.Forms;
 
 namespace Drawing
 {
@@ -20,7 +21,6 @@ namespace Drawing
                 }
             }  // set method
         }
-
         float xDiff, yDiff;   // range and mid points of x & y 
         public override PointF Center
         {
@@ -34,12 +34,10 @@ namespace Drawing
             set { }
 
         }
-
         public Square(PointF keyPt, PointF oppPt)   // constructor
         {
             Positions = new List<PointF>() { keyPt, oppPt };
         }
-
         public override void Draw(Graphics g)
         {
             Pen blackPen = new Pen(Color.Black);
@@ -50,15 +48,12 @@ namespace Drawing
             g.DrawLine(blackPen, (int)(Center.X - yDiff / 2), (int)(Center.Y + xDiff / 2), (int)Positions[0].X, (int)Positions[0].Y);
             PutPixel(g, new PointF(Center.X, Center.Y));
         }
-
-
         public void CalculateMidPoints()
         {
             // calculate ranges and mid points
             xDiff = Positions[1].X - Positions[0].X;
             yDiff = Positions[1].Y - Positions[0].Y;
         }
-
         public override void Highlight(Graphics g)
         {
             Pen greenPen = new Pen(Color.FromArgb(255, 0, 255, 0), 10);
@@ -69,7 +64,6 @@ namespace Drawing
             g.DrawLine(greenPen, (int)(Center.X - yDiff / 2), (int)(Center.Y + xDiff / 2), (int)Positions[0].X, (int)Positions[0].Y);
             Draw(g);
         }
-
         public override float CheckDistance(PointF p)
         {
             if (IsInsideRectangle(p))
@@ -80,14 +74,12 @@ namespace Drawing
             }
             return -1;
         }
-
         bool IsInsideRectangle(PointF p)
         {
             if (p.X > Positions[0].X && p.X < Positions[1].X && p.Y > Positions[0].Y && p.Y < Positions[1].Y)
                 return true;
             return false;
         }
-
         public override Shape TranslateX(int displacement)
         {
             PointF newPoint1 = this.Positions[0];

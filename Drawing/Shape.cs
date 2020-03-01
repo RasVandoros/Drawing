@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Windows.Forms;
 
 namespace Drawing
 {
@@ -32,32 +33,14 @@ namespace Drawing
         public abstract Shape TranslateX(int displacement);
         public abstract Shape TranslateY(int displacement);
         public abstract Shape Rotate(float angles);
-
         public PointF Rotate_point(PointF o, float degrees, PointF p)
         {
-            /*float s = (float)Math.Sin(angle);
-            float c = (float)Math.Cos(angle);
-
-            // translate point back to origin:
-            p.X -= pivot.X;
-            p.Y -= pivot.Y;
-
-            // rotate point
-            float xnew = p.X * c - p.Y * s;
-            float ynew = p.X * s + p.Y * c;
-
-            // translate point back:
-            p.X = (int)(xnew + pivot.X);
-            p.Y = (int)(ynew + pivot.Y);
-            return p;
-            */
             double angle = (Math.PI / 180) * degrees;
             PointF rotated = new PointF();
             rotated.X = (float)(o.X + Math.Cos(angle) * (p.X - o.X) - Math.Sin(angle) * (p.Y - o.Y));
             rotated.Y = (float)(o.Y + Math.Sin(angle) * (p.X - o.X) + Math.Cos(angle) * (p.Y - o.Y));
             return rotated;
         }
-
         public void PutPixel(Graphics g, PointF pixel)
         {
             Brush aBrush = (Brush)Brushes.Black;
