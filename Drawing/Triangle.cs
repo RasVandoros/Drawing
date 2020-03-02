@@ -120,5 +120,13 @@ namespace Drawing
             Positions = new List<PointF>() { newPoint1, newPoint2, newPoint3 };
             return this;
         }
+        public override Shape Resize(float scale)
+        {
+            PointF newPoint1 = this.Resize_point(Center, scale, Positions[0]);
+            PointF newPoint2 = this.Resize_point(Center, scale, Positions[1]);
+            PointF newPoint3 = this.Resize_point(Center, scale, Positions[2]);
+            Positions = new List<PointF>() { newPoint1, newPoint2, newPoint3 };
+            return this;
+        }
     }
 }

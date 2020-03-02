@@ -12,6 +12,58 @@ namespace Drawing
         private bool selectSquareStatus = false;
         private bool selectTriangleStatus = false;
         private bool selectCircleStatus = false;
+
+        public bool SelectShapeMode
+        {
+            get { return selectShapeMode; }
+            set
+            {
+                selectShapeMode = value;
+                Controls.Clear();
+                UpdateModeDisplay();
+            }
+        }
+        public bool CreateShapeMode
+        {
+            get { return createShapeMode; }
+            set
+            {
+                createShapeMode = value;
+                Controls.Clear();
+                UpdateModeDisplay();
+            }
+        }
+        public bool SelectSquareStatus
+        {
+            get { return selectSquareStatus; }
+            set
+            {
+                selectSquareStatus = value;
+                Controls.Clear();
+                UpdateModeDisplay();
+            }
+        }
+        public bool SelectTriangleStatus
+        {
+            get { return selectTriangleStatus; }
+            set
+            {
+                selectTriangleStatus = value;
+                Controls.Clear();
+                UpdateModeDisplay();
+            }
+        }
+        public bool SelectCircleStatus
+        {
+            get { return selectCircleStatus; }
+            set
+            {
+                selectCircleStatus = value;
+                Controls.Clear();
+                UpdateModeDisplay();
+            }
+        }
+
         private int clicknumber = 0;
         private PointF one;
         private PointF two;
@@ -19,6 +71,7 @@ namespace Drawing
         private int selectedIndex;
         private ContextMenu mnu;
         public static List<Shape> activeShapes = new List<Shape>();
+        public Label modeDisplay;
 
         public GrafPack()
         {
@@ -32,6 +85,7 @@ namespace Drawing
             MenuItem selectItem = new MenuItem();
             MenuItem deleteItem = new MenuItem();
             MenuItem transformItem = new MenuItem();
+            MenuItem resizeItem = new MenuItem();
             MenuItem squareItem = new MenuItem();
             MenuItem triangleItem = new MenuItem();
             MenuItem circleItem = new MenuItem();
@@ -45,6 +99,7 @@ namespace Drawing
             deleteItem.Text = "&Delete";
             transformItem.Text = "&Transform";
             moveRotateItem.Text = "&Move/Rotate";
+            resizeItem.Text = "&Resize";
 
             mainMenu.MenuItems.Add(createItem);
             mainMenu.MenuItems.Add(selectItem);
@@ -54,69 +109,134 @@ namespace Drawing
             createItem.MenuItems.Add(triangleItem);
             createItem.MenuItems.Add(circleItem);
             transformItem.MenuItems.Add(moveRotateItem);
+            transformItem.MenuItems.Add(resizeItem);
 
             selectItem.Click += new System.EventHandler(this.SelectShape);
-            deleteItem.Click += new System.EventHandler(this.DeleteShape);
+            deleteItem.Click += new System.EventHandler(this.OnDeleteClick);
             squareItem.Click += new System.EventHandler(this.SelectSquare);
             triangleItem.Click += new System.EventHandler(this.SelectTriangle);
             circleItem.Click += new System.EventHandler(this.SelectCircle);
-            moveRotateItem.Click += new System.EventHandler(this.SelectTransform);
+            moveRotateItem.Click += new System.EventHandler(this.OnTransformClick);
+            resizeItem.Click += new EventHandler(this.OnResizeClick);
+
             this.Menu = mainMenu;
-            this.MouseClick += mouseClick;
+            this.MouseClick += OnMouseClick;
+
             mnu = new ContextMenu();
             MenuItem mnuTransform = new MenuItem("Transform");
-            mnuTransform.Click += new EventHandler(SelectTransform);
-            mnu.MenuItems.AddRange(new MenuItem[] { mnuTransform });
+            MenuItem mnuResize = new MenuItem("Resize");
+            MenuItem mnuDeselect = new MenuItem("Deselect");
+
+            mnuTransform.Click += new EventHandler(OnTransformClick);
+            mnuResize.Click += new EventHandler(OnResizeClick);
+            mnuDeselect.Click += new EventHandler(OnDeselectClick);
+
+            mnu.MenuItems.AddRange(new MenuItem[] { mnuTransform, mnuResize, mnuDeselect });
             ContextMenu = mnu;
             HideContextMenu();
             selectedIndex = -1;
+            SelectShapeMode = true;
+            CreateShapeMode = false;
+            SelectSquareStatus = false;
+            SelectTriangleStatus = false;
+            SelectCircleStatus = false;
+        }
 
-        }
-        private void SelectSquare(object sender, EventArgs e)
+        private void OnDeselectClick(object sender, EventArgs e)
         {
-            ResetMode();
-            selectSquareStatus = true;
-            createShapeMode = true;
-            MessageBox.Show("Click OK and then click once each at two locations to create a square");
+            DeselectShape();
         }
-        private void SelectTriangle(object sender, EventArgs e)
-        {
-            ResetMode();
-            selectTriangleStatus = true;
-            createShapeMode = true;
 
-            MessageBox.Show("Click OK and then click once each at three locations to create a triangle");
-        }
-        private void SelectCircle(object sender, EventArgs e)
+        private void DeselectShape()
         {
-            ResetMode();
-            selectCircleStatus = true;
-            createShapeMode = true;
-            MessageBox.Show("Click OK and then click once each at two locations to create a circle");
+            activeShapes[selectedIndex].IsSelected = false;
+            selectedIndex = -1;
+            RefreshDrawings();
         }
-        private void SelectShape(object sender, EventArgs e)
+        private void OnResizeClick(object sender, EventArgs e)
         {
-            ResetMode();
-            selectShapeMode = true;
+            ResizeShape();
         }
-        private void SelectTransform(object sender, EventArgs e)
+        private void ResizeShape()
         {
             if (selectedIndex != -1)
             {
-                TranformationForm rf = new TranformationForm(activeShapes[selectedIndex]);
-                rf.ShowDialog();
+                ResizeForm resizeForm = new ResizeForm(activeShapes[selectedIndex]);
+                resizeForm.ShowDialog();
                 this.Controls.Clear();
+                SelectShapeMode = true;
                 RefreshDrawings();
             }
             else
             {
                 MessageBox.Show("Please select a shape first!");
                 ResetMode();
-                selectShapeMode = true;
+                SelectShapeMode = true;
             }
         }
-        private void DeleteShape(object sender, EventArgs e)
+
+        private void SelectSquare(object sender, EventArgs e)
         {
+            ResetMode();
+            SelectSquareStatus = true;
+            CreateShapeMode = true;
+            MessageBox.Show("Click OK and then click once each at two locations to create a square");
+        }
+        private void SelectTriangle(object sender, EventArgs e)
+        {
+            ResetMode();
+            SelectTriangleStatus = true;
+            CreateShapeMode = true;
+
+            MessageBox.Show("Click OK and then click once each at three locations to create a triangle");
+        }
+        private void SelectCircle(object sender, EventArgs e)
+        {
+            ResetMode();
+            SelectCircleStatus = true;
+            CreateShapeMode = true;
+            MessageBox.Show("Click OK and then click once each at two locations to create a circle");
+        }
+        private void SelectShape(object sender, EventArgs e)
+        {
+            ResetMode();
+            SelectShapeMode = true;
+        }
+
+        private void OnTransformClick(object sender, EventArgs e)
+        {
+            TransformShape();
+        }
+        private void TransformShape()
+        {
+            if (selectedIndex != -1)
+            {
+                TranformationForm rf = new TranformationForm(activeShapes[selectedIndex]);
+                rf.ShowDialog();
+                this.Controls.Clear();
+                SelectShapeMode = true;
+                RefreshDrawings();
+            }
+            else
+            {
+                MessageBox.Show("Please select a shape first!");
+                ResetMode();
+                SelectShapeMode = true;
+            }
+        }
+        private void OnDeleteClick(object sender, EventArgs e)
+        {
+            DeleteShape();
+        }
+        private void DeleteShape()
+        {
+            if (selectedIndex == -1)
+            {
+                MessageBox.Show("Please select a shape first!");
+                ResetMode();
+                SelectShapeMode = true;
+                return;
+            }
             string message = "Are you sure you want to delete the selected shape?";
             string title = "Delete Shape";
             MessageBoxButtons buttons = MessageBoxButtons.YesNo;
@@ -133,31 +253,32 @@ namespace Drawing
                 }
                 this.Controls.Clear();
                 RefreshDrawings();
+                SelectShapeMode = true;
             }
             ResetMode();
         }
-        private void mouseClick(object sender, MouseEventArgs e)
+        private void OnMouseClick(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Left)
             {
-                if (createShapeMode)
+                if (CreateShapeMode)
                 {
-                    if (selectSquareStatus == true)
+                    if (SelectSquareStatus == true)
                     {
                         CreateSquare(e);
                     }
 
-                    else if (selectTriangleStatus == true)
+                    else if (SelectTriangleStatus == true)
                     {
                         CreateTriangle(e);
                     }
 
-                    else if (selectCircleStatus == true)
+                    else if (SelectCircleStatus == true)
                     {
                         CreateCircle(e);
                     }
                 }
-                else if (selectShapeMode)
+                else if (SelectShapeMode)
                 {
                     Highlight(e);
                 }
@@ -217,7 +338,7 @@ namespace Drawing
             g.Clear(Color.White);
             foreach (Shape s in activeShapes)
             {
-                
+
                 if (s.IsSelected)
                 {
                     s.Highlight(g);
@@ -295,11 +416,11 @@ namespace Drawing
         }
         private void ResetMode()
         {
-            selectShapeMode = false;
-            createShapeMode = false;
-            selectSquareStatus = false;
-            selectTriangleStatus = false;
-            selectCircleStatus = false;
+            SelectShapeMode = false;
+            CreateShapeMode = false;
+            SelectSquareStatus = false;
+            SelectTriangleStatus = false;
+            SelectCircleStatus = false;
             clicknumber = 0;
         }
         private void ShowContextMenu()
@@ -317,20 +438,38 @@ namespace Drawing
             }
         }
         protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        { 
+        {
             if (selectedIndex == -1)
             {
-                if(activeShapes.Count < 1)
+                if (activeShapes.Count < 1)
                 {
                     return false;
                 }
                 else
                 {
-                    selectedIndex = 0;
-                    activeShapes[0].IsSelected = true;
-                    RefreshDrawings();
-                    return true;
+                    if (keyData == Keys.Right || keyData == Keys.Left)
+                    {
+                        selectedIndex = 0;
+                        activeShapes[0].IsSelected = true;
+                        RefreshDrawings();
+                        return true;
+                    }
                 }
+            }
+            if (keyData == Keys.D)
+            {
+                DeleteShape();
+                return true;
+            }
+            else if (keyData == Keys.T)
+            {
+                TransformShape();
+                return true;
+            }
+            else if (keyData == Keys.R)
+            {
+                ResizeShape();
+                return true;
             }
             activeShapes[selectedIndex].IsSelected = false;
             if (keyData == Keys.Right)
@@ -344,7 +483,7 @@ namespace Drawing
                     selectedIndex = 0;
                 }
             }
-            if (keyData == Keys.Left)
+            else if (keyData == Keys.Left)
             {
                 if (selectedIndex - 1 >= 0)
                 {
@@ -355,6 +494,7 @@ namespace Drawing
                     selectedIndex = activeShapes.Count - 1;
                 }
             }
+
             activeShapes[selectedIndex].IsSelected = true;
             RefreshDrawings();
             return true;
@@ -370,6 +510,34 @@ namespace Drawing
             pixelCoordinates.Text = "(" + x + ", " + y + ")";
             pixelCoordinates.AutoSize = true;
             Controls.Add(pixelCoordinates);
+        }
+        private void UpdateModeDisplay()
+        {
+            modeDisplay = new Label();
+            modeDisplay.Font = new Font("Arial", 16, FontStyle.Bold); ;
+            modeDisplay.Dock = DockStyle.Bottom;
+            modeDisplay.TextAlign = ContentAlignment.BottomRight;
+            if (SelectShapeMode)
+            {
+                modeDisplay.Text = "Active Mode: Selection";
+            }
+            else if (CreateShapeMode)
+            {
+                modeDisplay.Text = "Active Mode: Creation Mode";
+                if (SelectSquareStatus)
+                {
+                    modeDisplay.Text = "Active Mode: Square Creation Mode";
+                }
+                else if (SelectTriangleStatus)
+                {
+                    modeDisplay.Text = "Active Mode: Triangle Creation Mode";
+                }
+                else if (SelectCircleStatus)
+                {
+                    modeDisplay.Text = "Active Mode: Circle Creation Mode"; ;
+                }
+            }
+            this.Controls.Add(modeDisplay);
         }
     }
 }

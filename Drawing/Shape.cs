@@ -33,6 +33,7 @@ namespace Drawing
         public abstract Shape TranslateX(int displacement);
         public abstract Shape TranslateY(int displacement);
         public abstract Shape Rotate(float angles);
+        public abstract Shape Resize(float scale);
         public PointF Rotate_point(PointF o, float degrees, PointF p)
         {
             double angle = (Math.PI / 180) * degrees;
@@ -40,6 +41,15 @@ namespace Drawing
             rotated.X = (float)(o.X + Math.Cos(angle) * (p.X - o.X) - Math.Sin(angle) * (p.Y - o.Y));
             rotated.Y = (float)(o.Y + Math.Sin(angle) * (p.X - o.X) + Math.Cos(angle) * (p.Y - o.Y));
             return rotated;
+        }
+        public PointF Resize_point(PointF o, float scale, PointF p)
+        {
+            PointF postResizing = new PointF();
+            float length = Utils.GetDistance(p, o);
+            length = length * scale;
+            postResizing.X = (p.X - o.X) * scale + o.X;
+            postResizing.Y = (p.Y - o.Y) * scale + o.Y;
+            return postResizing;
         }
         public void PutPixel(Graphics g, PointF pixel)
         {
