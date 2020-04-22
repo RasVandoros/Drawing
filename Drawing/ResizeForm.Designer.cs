@@ -54,9 +54,9 @@
             this.xDisplacement.AutoSize = true;
             this.xDisplacement.Location = new System.Drawing.Point(9, 169);
             this.xDisplacement.Name = "xDisplacement";
-            this.xDisplacement.Size = new System.Drawing.Size(30, 13);
+            this.xDisplacement.Size = new System.Drawing.Size(36, 13);
             this.xDisplacement.TabIndex = 31;
-            this.xDisplacement.Text = "7.5%";
+            this.xDisplacement.Text = "12.5%";
             // 
             // label7
             // 
