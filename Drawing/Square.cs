@@ -21,7 +21,12 @@ namespace Drawing
                 }
             }  // set method
         }
+
         float xDiff, yDiff;   // range and mid points of x & y 
+        
+        /// <summary>
+        /// The getter method calculates the center of the square
+        /// </summary>
         public override PointF Center
         {
             get
@@ -34,6 +39,12 @@ namespace Drawing
             set { }
 
         }
+
+        /// <summary>
+        /// Constructor. Adds the relevant positions of the square into the positions list.
+        /// </summary>
+        /// <param name="keyPt"></param>
+        /// <param name="oppPt"></param>
         public Square(PointF keyPt, PointF oppPt)   // constructor
         {
             Positions = new List<PointF>() { keyPt, oppPt };
@@ -74,12 +85,26 @@ namespace Drawing
             }
             return -1;
         }
+
+        /// <summary>
+        /// Checks if the click is inside the rectangle 
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
         bool IsInsideRectangle(PointF p)
         {
             if (p.X > Positions[0].X && p.X < Positions[1].X && p.Y > Positions[0].Y && p.Y < Positions[1].Y)
+            {
                 return true;
+            }
             return false;
         }
+
+        /// <summary>
+        /// x displacement happens by adding the input value to the x value of the two positions that define the square.
+        /// </summary>
+        /// <param name="displacement"></param>
+        /// <returns></returns>
         public override Shape TranslateX(int displacement)
         {
             PointF newPoint1 = this.Positions[0];
@@ -89,6 +114,12 @@ namespace Drawing
             Positions = new List<PointF>() { newPoint1, newPoint2 };
             return this;
         }
+        
+        /// <summary>
+        /// y displacement happens by adding the input value to the y value of the two positions that define the square.
+        /// </summary>
+        /// <param name="displacement"></param>
+        /// <returns></returns>
         public override Shape TranslateY(int displacement)
         {
             PointF newPoint1 = this.Positions[0];
@@ -98,6 +129,12 @@ namespace Drawing
             Positions = new List<PointF>() { newPoint1, newPoint2 };
             return this;
         }
+
+        /// <summary>
+        /// Rotation happens by calling the rotate_point method using the input value of the form.
+        /// </summary>
+        /// <param name="displacement"></param>
+        /// <returns></returns>
         public override Shape Rotate(float angle)
         {
             PointF newPoint1 = this.Rotate_point(new PointF(Center.X, Center.Y), angle, Positions[0]);
@@ -105,6 +142,12 @@ namespace Drawing
             Positions = new List<PointF>() { newPoint1, newPoint2 };
             return this;
         }
+
+        /// <summary>
+        /// Resize happens by calling the resize_point method using the input value of the form.
+        /// </summary>
+        /// <param name="scale"></param>
+        /// <returns></returns>
         public override Shape Resize(float scale)
         {
             PointF newPoint1 = this.Resize_point(Center, scale, Positions[0]);

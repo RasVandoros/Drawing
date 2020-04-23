@@ -34,6 +34,14 @@ namespace Drawing
         public abstract Shape TranslateY(int displacement);
         public abstract Shape Rotate(float angles);
         public abstract Shape Resize(float scale);
+
+        /// <summary>
+        /// Rotate a point, around on a second point.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="degrees"></param>
+        /// <param name="p"></param>
+        /// <returns></returns>
         public PointF Rotate_point(PointF o, float degrees, PointF p)
         {
             double angle = (Math.PI / 180) * degrees;
@@ -42,6 +50,15 @@ namespace Drawing
             rotated.Y = (float)(o.Y + Math.Sin(angle) * (p.X - o.X) + Math.Cos(angle) * (p.Y - o.Y));
             return rotated;
         }
+
+        /// <summary>
+        /// Resize a point, based on a second point.
+        /// That is performed by adjusting the distance between the two points accorind to the resizing coefficient.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="scale"></param>
+        /// <param name="p"></param>
+        /// <returns></returns>
         public PointF Resize_point(PointF o, float scale, PointF p)
         {
             PointF postResizing = new PointF();
@@ -51,6 +68,11 @@ namespace Drawing
             postResizing.Y = (p.Y - o.Y) * scale + o.Y;
             return postResizing;
         }
+        /// <summary>
+        /// Draw a single pixel on a point
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="pixel"></param>
         public void PutPixel(Graphics g, PointF pixel)
         {
             Brush aBrush = (Brush)Brushes.Black;

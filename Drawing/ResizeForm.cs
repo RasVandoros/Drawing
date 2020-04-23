@@ -21,12 +21,18 @@ namespace Drawing
             label2.Text = s1.GetType().Name;
         }
 
+        /// <summary>
+        /// When the submit button is pressed, the input from the resize tracking bar on the form is gathered. 
+        /// Depending on the selected tick, a value of resizing is defined.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void submitButton_Click(object sender, EventArgs e)
         {
 
-            int test = resizeTrack.Value;
+            int resizeTracker = resizeTrack.Value;
             float scale = 0.0f;
-            switch (test)
+            switch (resizeTracker)
             {
                 case 0:
                     scale = 0.125f;
@@ -78,6 +84,11 @@ namespace Drawing
                 return;
             }
             this.Close();
+        }
+
+        private void ResizeForm_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Drawing
 {
     public class Circle : Shape
     {
-        private List<PointF> positions; // these points identify opposite corners of the square
+        private List<PointF> positions; // these points identify opposite points of the circle, defining the diameter. 
         public override List<PointF> Positions   // property
         {
             get { return positions; }
@@ -47,6 +47,11 @@ namespace Drawing
         {
             IterateCircle(g, PutPixel);
         }
+        /// <summary>
+        /// Iterate through each pixel of the circle.
+        /// </summary>
+        /// <param name="g"></param>
+        /// <param name="ApplyTechnique"></param>
         public void IterateCircle(Graphics g, Action<Graphics, PointF> ApplyTechnique)
         {
             int x = 0;
@@ -103,6 +108,11 @@ namespace Drawing
             }
             return -1;
         }
+        /// <summary>
+        /// x displacement happens by adding the input value to the x value of the two positions that define the square.
+        /// </summary>
+        /// <param name="displacement"></param>
+        /// <returns></returns>
         public override Shape TranslateX(int displacement)
         {
             PointF newPoint1 = this.Positions[0];
@@ -112,6 +122,11 @@ namespace Drawing
             Positions = new List<PointF>() { newPoint1, newPoint2 };
             return this;
         }
+        /// <summary>
+        /// y displacement happens by adding the input value to the y value of the two positions that define the square.
+        /// </summary>
+        /// <param name="displacement"></param>
+        /// <returns></returns>
         public override Shape TranslateY(int displacement)
         {
             PointF newPoint1 = this.Positions[0];
@@ -121,10 +136,20 @@ namespace Drawing
             Positions = new List<PointF>() { newPoint1, newPoint2 };
             return this;
         }
+        /// <summary>
+        /// Rotation happens by calling the rotate_point method using the input value of the form.
+        /// </summary>
+        /// <param name="displacement"></param>
+        /// <returns></returns>
         public override Shape Rotate(float angle)
         {
             return this;
         }
+        /// <summary>
+        /// Resize happens by calling the resize_point method using the input value of the form.
+        /// </summary>
+        /// <param name="scale"></param>
+        /// <returns></returns>
         public override Shape Resize(float scale)
         {
             PointF newPoint1 = this.Resize_point(Center, scale, Positions[0]);

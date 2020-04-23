@@ -17,10 +17,20 @@ namespace Drawing
                 positions = value;
             }
         }
+
+        /// <summary>
+        /// Area of the triangle.
+        /// The get method calculates it.
+        /// </summary>
         public float Area
         {
             get { return Utils.TriangleAreaCalculator(Positions[0], Positions[1], Positions[2]); }
         }
+
+        /// <summary>
+        /// Returns the centre of the triangle. 
+        /// It is calculated in the get method.
+        /// </summary>
         public override PointF Center
         {
             get
@@ -33,10 +43,23 @@ namespace Drawing
             set { }
 
         }
+        
+        /// <summary>
+        /// Constructor.
+        /// Adds the relevant points of the triangle into the list of positions.
+        /// </summary>
+        /// <param name="point1"></param>
+        /// <param name="point2"></param>
+        /// <param name="point3"></param>
         public Triangle(PointF point1, PointF point2, PointF point3)   // constructor
         {
             Positions = new List<PointF>() { point1, point2, point3 };
         }
+        
+        /// <summary>
+        /// Draws the green highlight around the triangle.
+        /// </summary>
+        /// <param name="g"></param>
         public override void Highlight(Graphics g)
         {
             Pen greenPen = new Pen(Color.FromArgb(255, 0, 255, 0), 10);
@@ -44,13 +67,6 @@ namespace Drawing
             g.DrawLine(greenPen, (int)Positions[0].X, (int)Positions[0].Y, (int)Positions[1].X, (int)Positions[1].Y);
             g.DrawLine(greenPen, (int)Positions[1].X, (int)Positions[1].Y, (int)Positions[2].X, (int)Positions[2].Y);
             g.DrawLine(greenPen, (int)Positions[0].X, (int)Positions[0].Y, (int)Positions[2].X, (int)Positions[2].Y);
-
-
-
-
-
-
-            ;
         }
         public override void Draw(Graphics g)
         {
@@ -76,6 +92,12 @@ namespace Drawing
             }
             return -1;
         }
+
+        /// <summary>
+        /// Check if a point is inside the boundaries of the tringle.
+        /// </summary>
+        /// <param name="p"></param>
+        /// <returns></returns>
         public bool IsInsideTriangle(PointF p)
         {
             float myTriangleArea = Area;
@@ -90,6 +112,12 @@ namespace Drawing
             }
             return false;
         }
+
+        /// <summary>
+        /// x displacement happens by adding the input value to the x value of the two positions that define the square.
+        /// </summary>
+        /// <param name="displacement"></param>
+        /// <returns></returns>
         public override Shape TranslateX(int displacement)
         {
             PointF newPoint1 = this.Positions[0];
@@ -101,6 +129,11 @@ namespace Drawing
             Positions = new List<PointF>() { newPoint1, newPoint2, newPoint3 };
             return this;
         }
+        /// <summary>
+        /// y displacement happens by adding the input value to the y value of the two positions that define the square.
+        /// </summary>
+        /// <param name="displacement"></param>
+        /// <returns></returns>
         public override Shape TranslateY(int displacement)
         {
             PointF newPoint1 = this.Positions[0];
@@ -112,6 +145,11 @@ namespace Drawing
             Positions = new List<PointF>() { newPoint1, newPoint2, newPoint3 };
             return this;
         }
+        /// <summary>
+        /// Rotation happens by calling the rotate_point method using the input value of the form.
+        /// </summary>
+        /// <param name="displacement"></param>
+        /// <returns></returns>
         public override Shape Rotate(float angle)
         {
             PointF newPoint1 = this.Rotate_point(Center, angle, Positions[0]);
@@ -120,6 +158,11 @@ namespace Drawing
             Positions = new List<PointF>() { newPoint1, newPoint2, newPoint3 };
             return this;
         }
+        /// <summary>
+        /// Resize happens by calling the resize_point method using the input value of the form.
+        /// </summary>
+        /// <param name="scale"></param>
+        /// <returns></returns>
         public override Shape Resize(float scale)
         {
             PointF newPoint1 = this.Resize_point(Center, scale, Positions[0]);

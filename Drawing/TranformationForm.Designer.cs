@@ -144,7 +144,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "TranformationForm";
-            this.Text = "RotateForm";
+            this.Text = "Transformation Form";
             this.ResumeLayout(false);
             this.PerformLayout();
 

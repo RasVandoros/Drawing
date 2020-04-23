@@ -130,6 +130,7 @@
             this.Controls.Add(this.label1);
             this.Name = "ResizeForm";
             this.Text = "ResizeForm";
+            this.Load += new System.EventHandler(this.ResizeForm_Load);
             ((System.ComponentModel.ISupportInitialize)(this.resizeTrack)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

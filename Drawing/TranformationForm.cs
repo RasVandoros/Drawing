@@ -8,6 +8,11 @@ namespace Drawing
     public partial class TranformationForm : Form
     {
         Shape selected;
+        
+        /// <summary>
+        /// Initiate the tranformation form.
+        /// </summary>
+        /// <param name="s1"></param>
         public TranformationForm(Shape s1)
         {
             InitializeComponent();
@@ -15,6 +20,11 @@ namespace Drawing
             label2.Text = s1.GetType().Name;
         }
 
+        /// <summary>
+        /// On Press of the submit button, the form takes the input values and performs the relevant action.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void submitButton_Click(object sender, EventArgs e)
         {
             Dictionary<string, int> ht = new Dictionary<string, int>();
@@ -52,6 +62,7 @@ namespace Drawing
             if (result == DialogResult.Yes)
             {
                 this.Close();
+                //Deal with each of the input boxes that were filled with relevant information. 
                 if (ht.ContainsKey("xTranslation"))
                 {
                     GrafPack gp = new GrafPack();
@@ -81,7 +92,6 @@ namespace Drawing
         {
             selected = selected.Rotate(displacement);
         }
-
 
         public void TranslateX(int displacement)
         {
